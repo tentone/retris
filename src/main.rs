@@ -15,7 +15,27 @@ struct Test {
     ok: DerpEnum
 }
 
+impl Test {
+    fn new()->Test {
+        return Test{derp: String::from("derpine"), age: 23, date: 23, ok: DerpEnum::Maybe}
+    }
+
+    fn testDerp(&self) -> () {
+        println!("Test {0}, {1}", self.derp, self.date);
+    }
+}
+
 const TEST_UPPER: &str = "asdasdasd";
+
+fn derp(a: i64) -> bool {
+    return false
+}
+
+fn fizzbuzz(mut n: i32) -> () {
+    n = 4;
+
+    println!("fizzbuzz {0}", n)
+}
 
 fn main() {
     println!("Hello modafoca");
@@ -41,4 +61,19 @@ fn main() {
 
     // Error!
     _immutable_binding += 1;
+
+    println!("1000 as a u16 is: {}", 1000 as u16);
+
+    let mut a: i32 = 3;
+
+    fizzbuzz(a);
+
+    t.testDerp();
+
+    let d: Test = Test::new();
+    d.testDerp();
+
+    // a = 4;
+
+    println!("{0}", a);
 }
