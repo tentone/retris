@@ -25,6 +25,10 @@ impl Test {
     }
 }
 
+fn testtest(t: Test) -> () {
+    t.testDerp();
+}
+
 const TEST_UPPER: &str = "asdasdasd";
 
 fn derp(a: i64) -> bool {
@@ -71,6 +75,9 @@ fn main() {
     t.testDerp();
 
     let d: Test = Test::new();
+
+    testtest(d);
+    
     d.testDerp();
 
     // a = 4;
