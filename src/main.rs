@@ -76,8 +76,8 @@ fn main() {
 
     let d: Test = Test::new();
 
-    testtest(d);
-    
+    // testtest(d);
+
     d.testDerp();
 
     // a = 4;
