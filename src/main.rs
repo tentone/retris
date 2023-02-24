@@ -2,6 +2,19 @@
 #![allow(dead_code)]
 
 
+mod test {
+    pub struct DerpStruct<T> {
+        pub derp: T,
+        pub value: i32
+    }
+
+    impl<T> DerpStruct<T> {
+        pub fn new(value: T) -> DerpStruct<T> {
+            return DerpStruct{derp: value, value: 2};
+        }
+    }
+}
+
 enum DerpEnum {
     Yes,
     No,
@@ -73,6 +86,8 @@ fn main() {
     fizzbuzz(a);
 
     t.testDerp();
+
+    let da: test::DerpStruct<u16> = test::DerpStruct::new(4);
 
     let d: Test = Test::new();
 
