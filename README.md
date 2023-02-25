@@ -1,6 +1,6 @@
 # Retris
  - Tetris game written in rust with WASM support
- - Uses [Bevy](https://github.com/bevyengine/bevy) for input, graphics and sound.
+ - Uses [macroquad](https://github.com/not-fl3/macroquad/) for input, graphics and sound.
 
 ## Install 
  - Install [Rust](https://www.rust-lang.org/tools/install) development tools.
