@@ -31,9 +31,19 @@ async fn main() {
         let height: f32 = screen_height();
         
 
-        draw_line(40.0, 40.0, 100.0, 200.0, 15.0, BLUE);
-        draw_rectangle(width / 2.0 - 60.0, 100.0, 120.0, 60.0, GREEN);
-        draw_circle(width - 30.0, height - 30.0, 15.0, YELLOW);
+        // draw_line(40.0, 40.0, 100.0, 200.0, 15.0, BLUE);
+        // draw_rectangle(width / 2.0 - 60.0, 100.0, 120.0, 60.0, GREEN);
+        // draw_circle(width - 30.0, height - 30.0, 15.0, YELLOW);
+        
+        let mut x: i32 = 0;
+        while x < board_size.x {
+            let mut y: i32 = 0;
+            while y < board_size.y {
+                draw_rectangle(30.0 * x as f32, 30.0 * y as f32, 30.0, 30.0, GREEN);
+                y += 1;
+            }
+            x += 1;
+        }
 
 
         if (is_key_down(KeyCode::A)) {
