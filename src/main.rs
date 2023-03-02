@@ -21,7 +21,8 @@ async fn main() {
     let running = true;
 
     let board_size: Vector2<i32> = Vector2{x: 10, y: 20};
-    // let board = [mut [mut 0u8, ..4], ..4];
+
+    let mut board: [i32; 20];
 
 
     while running {
