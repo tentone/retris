@@ -1,15 +1,16 @@
 use macroquad::prelude::*;
+use std::ops::Add;
 
-pub struct Vector2<T> {
-    x: T,
-    y: T
+pub struct Vector2i {
+    x: i32,
+    y: i32
 }
 
-// impl<T> Vector2<T> {
+// impl Vector2i {
 //     /**
 //      * Add two vectors and store in this object.
 //      */
-//     fn add(&self, a: Vector2<T>) -> () {
+//     fn add(&self, a: Vector2i) -> () {
 //         self.x += a.x;
 //         self.y += a.y;
 //     }
@@ -20,17 +21,45 @@ async fn main() {
 
     let running = true;
 
-    let board_size: Vector2<i32> = Vector2{x: 10, y: 20};
+    // Store the current game score
+    let mut score = 0;
 
-    let mut board: [i32; 20];
+    // Board size
+    let board_size: Vector2i = Vector2i{x: 10, y: 20};
 
+    // Current board status
+    let mut board: [[i32; 10]; 20] = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ];
 
+    
     while running {
         clear_background(BLACK);
 
         let width: f32 = screen_width();
         let height: f32 = screen_height();
         
+        
+
 
         // draw_line(40.0, 40.0, 100.0, 200.0, 15.0, BLUE);
         // draw_rectangle(width / 2.0 - 60.0, 100.0, 120.0, 60.0, GREEN);
@@ -47,12 +76,12 @@ async fn main() {
         }
 
 
-        if (is_key_down(KeyCode::A)) {
+        if is_key_down(KeyCode::A) {
             println!("A is down");
         }
 
         // Close application
-        if (is_key_down(KeyCode::Escape)) {
+        if is_key_down(KeyCode::Escape) {
             return;
         }
 
