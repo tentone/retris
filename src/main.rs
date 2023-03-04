@@ -1,5 +1,4 @@
 use macroquad::prelude::*;
-use std::{thread, time::{self, SystemTime, UNIX_EPOCH}};
 
 pub struct Vector2i {
     x: i32,
@@ -61,6 +60,8 @@ impl Tetris {
 
 #[macroquad::main("Retris")]
 async fn main() {
+    // Random number generator
+    // let mut rng = rand::thread_rng();
 
     // Flag to indicate if the game is running
     let mut running = true;
@@ -291,7 +292,7 @@ async fn main() {
         draw_text(&(String::from("Score: ") + &score.to_string()), 10.0, 50.0, 30.0, macroquad::color::WHITE);
 
         // Pause message
-        if (paused) {
+        if paused {
             draw_rectangle(0.0, 0.0, width, height, macroquad::color::Color{r: 0.0, g: 0.0, b: 0.0, a: 0.4});
             draw_text("Paused", width / 2.0, height / 2.0, 40.0, macroquad::color::WHITE);
         }
