@@ -1,5 +1,5 @@
 use macroquad::prelude::*;
-use std::{thread, time};
+use std::{thread, time::{self, SystemTime, UNIX_EPOCH}};
 
 pub struct Vector2i {
     x: i32,
@@ -27,6 +27,9 @@ pub struct TetrisBoard {
 
 
 pub struct Tetris {
+    board: TetrisBoard,
+    
+    // Status
     running: bool,
 
     // Store the current game score
@@ -39,8 +42,8 @@ impl Tetris {
 
     }
 
-    pub fn change_state(state: i32) {
-
+    pub fn change_state(mut self, running: bool) {
+        self.running = running;
     }
 
     pub fn update() {
@@ -59,10 +62,19 @@ impl Tetris {
 #[macroquad::main("Retris")]
 async fn main() {
 
-    let running = true;
+    // Flag to indicate if the game is running
+    let mut running = true;
+
+    // Pause control flag
+    let mut paused = false;
 
     // Store the current game score
     let mut score = 0;
+
+    // Count how many frames ellapsed since the beginning of the game
+    let mut frame = 0;
+
+
 
     // Board size
     let size: Vector2i = Vector2i::new(10, 20);
@@ -119,7 +131,7 @@ async fn main() {
         [0, 0, 0, 0, 0, 2, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 2, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 3, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+        [1, 1, 2, 3, 3, 4, 4, 5, 6, 7],
         [0, 0, 0, 0, 4, 2, 0, 0, 0, 0],
         [0, 0, 0, 2, 3, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -128,6 +140,7 @@ async fn main() {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ];
+
 
     let mut colors: [macroquad::color::Color; 8] = [
         macroquad::color::BLACK,
@@ -144,6 +157,85 @@ async fn main() {
     while running {
         clear_background(BLACK);
 
+        // Update logic
+        // let ms = SystemTime::now().duration_since(UNIX_EPOCH).as_millis();
+        // println!("{0}", ms);
+
+        // let ms: time::Duration = time::Duration::from_millis(1000);
+        // thread::sleep(ms);
+
+        // Pause
+        if is_key_pressed(KeyCode::P) {
+            paused = !paused;
+        }
+
+
+        // Rotate Piece
+        if is_key_pressed(KeyCode::Up) {
+            println!("Up is down");
+        }
+        // Move Piece left
+        if is_key_pressed(KeyCode::Left) {
+            println!("left is down");
+        }
+        if is_key_pressed(KeyCode::Right) {
+            println!("right is down");
+        }
+        // Place Piece
+        if is_key_pressed(KeyCode::Down) {
+            println!("down is down");
+        }
+
+        // Move piece down
+        if frame % 200 == 199 {
+
+
+            // Check the status of the board
+            let mut y: i32 = 0;
+            while y < size.y {
+
+                // Check if any row in the board is full
+                let mut row_full: bool = true;
+                let mut x: i32 = 0;
+                while x < size.x {
+                    let value: i32 = board[y as usize][x as usize];
+                    if value == 0 {
+                        row_full = false;
+                        break;
+                    }
+                    x += 1;
+                }
+
+                // If row is full remove from board and increase score
+                if row_full {
+                    println!("Row is full");
+
+                    // Move rows above this one bellow
+                    let mut yy: i32 = y;
+                    while yy > 1 {
+                        let mut x: i32 = 0;
+                        while x < size.x {
+                            board[yy as usize][x as usize] = board[(yy - 1) as usize][x as usize];
+                            x += 1;
+                        }
+
+                        yy -= 1;
+                    }
+
+                    // Clear first row
+                    let mut x: i32 = 0;
+                    while x < size.x {
+                        board[0][x as usize] = 0;
+                        x += 1;
+                    }
+
+                    score += 1;
+                }
+                y += 1;
+            }
+        }
+
+        // Render the board
         let width: f32 = screen_width();
         let height: f32 = screen_height();
         
@@ -161,20 +253,18 @@ async fn main() {
             x += 1;
         }
 
-        // let ms: time::Duration = time::Duration::from_millis(1000);
-        // thread::sleep(ms);
 
-        // draw_line(40.0, 40.0, 100.0, 200.0, 15.0, BLUE);
-        // draw_rectangle(width / 2.0 - 60.0, 100.0, 120.0, 60.0, GREEN);
-        // draw_circle(width - 30.0, height - 30.0, 15.0, YELLOW);
-        
-        draw_text(&(String::from("Score: ") + &score.to_string()), 10.0, 20.0, 30.0, macroquad::color::WHITE);
+        draw_text(&(String::from("Frame: ") + &frame.to_string()), 10.0, 25.0, 30.0, macroquad::color::WHITE);
+        draw_text(&(String::from("Score: ") + &score.to_string()), 10.0, 50.0, 30.0, macroquad::color::WHITE);
 
-        if is_key_down(KeyCode::A) {
-            println!("A is down");
+        // Pause message
+        if (paused) {
+            draw_rectangle(0.0, 0.0, width, height, macroquad::color::Color{r: 0.0, g: 0.0, b: 0.0, a: 0.4});
+            draw_text("Paused", width / 2.0, height / 2.0, 40.0, macroquad::color::WHITE);
         }
+        
 
-        score += 1;
+        frame += 1;
 
         // Close application
         if is_key_down(KeyCode::Escape) {
@@ -183,6 +273,4 @@ async fn main() {
 
         next_frame().await;
     }
-
-    println!("Hello, world!");
 }
