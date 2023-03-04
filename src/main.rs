@@ -74,14 +74,10 @@ async fn main() {
     // Count how many frames ellapsed since the beginning of the game
     let mut frame = 0;
 
-    // Piece position and type
-    let mut piece_pos: Vector2i = Vector2i::new(4, 0);
-    let mut piece_type: i32 = 0;
-
     // Board size
     let size: Vector2i = Vector2i::new(10, 20);
 
-    let mut pieces: [[[i32; 4]; 4]; 7] = [
+    let pieces: [[[i32; 4]; 4]; 7] = [
         [
             [1, 1, 1, 1],
             [0, 0, 0, 0],
@@ -162,11 +158,14 @@ async fn main() {
         macroquad::color::LIME
     ];
 
+
+    // Piece position and type
+    let mut piece_pos: Vector2i = Vector2i::new(4, 0);
+    let mut piece: [[i32; 4]; 4] = pieces[0];
+
     
     while running {
-        clear_background(BLACK);
-
-        // Update logic
+        // ------------------- Update Logic -------------------
         // let ms = SystemTime::now().duration_since(UNIX_EPOCH).as_millis();
         // println!("{0}", ms);
 
@@ -186,22 +185,28 @@ async fn main() {
         // Move Piece left
         if is_key_pressed(KeyCode::Left) {
             println!("left is down");
+            piece_pos.x -= 1;
         }
         if is_key_pressed(KeyCode::Right) {
             println!("right is down");
+            piece_pos.x += 1;
         }
         // Place Piece
         if is_key_pressed(KeyCode::Down) {
             println!("down is down");
         }
-
-        
-
         
 
         // Move piece down
-        if frame % 20 == 0 {
+        if frame % 40 == 0 {
+            // Check if the piece can move down further
+            let mut piece_can_move: bool = true;
+            // TODO
 
+            // Move the piece down
+            if piece_can_move {
+                piece_pos.y += 1;
+            }
 
             // Check the status of the board
             let mut y: i32 = 0;
@@ -248,13 +253,16 @@ async fn main() {
             }
         }
 
-        // Render the board
+        // ------------------- Render code -------------------
+        clear_background(BLACK);
+
         let width: f32 = screen_width();
         let height: f32 = screen_height();
         
         let block: f32 = height / size.y as f32;
         let origin: f32 = width as f32 / 2.0 - (size.x as f32 * block) / 2.0;
 
+        // Base board
         let mut x: i32 = 0;
         while x < size.x {
             let mut y: i32 = 0;
@@ -267,6 +275,18 @@ async fn main() {
         }
 
 
+        // Moving piece
+        let mut x: i32 = 0;
+        while x < 4 {
+            let mut y: i32 = 0;
+            while y < 4 {
+                draw_rectangle(origin + block * (piece_pos.x + x) as f32, block * (piece_pos.y + y) as f32, block as f32, block, colors[piece[y as usize][x as usize] as usize]);
+                y += 1;
+            }
+            x += 1;
+        }
+
+        // Draw text
         draw_text(&(String::from("Frame: ") + &frame.to_string()), 10.0, 25.0, 30.0, macroquad::color::WHITE);
         draw_text(&(String::from("Score: ") + &score.to_string()), 10.0, 50.0, 30.0, macroquad::color::WHITE);
 
