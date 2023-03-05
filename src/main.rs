@@ -80,8 +80,8 @@ async fn main() {
 
     let pieces: [[[i32; 4]; 4]; 7] = [
         [
-            [1, 1, 1, 1],
             [0, 0, 0, 0],
+            [1, 1, 1, 1],
             [0, 0, 0, 0],
             [0, 0, 0, 0]
         ],
@@ -92,9 +92,9 @@ async fn main() {
             [0, 0, 0, 0]
         ],
         [
-            [0, 1, 1, 0],
-            [0, 1, 1, 0],
             [0, 0, 0, 0],
+            [0, 1, 1, 0],
+            [0, 1, 1, 0],
             [0, 0, 0, 0]
         ],
         [
@@ -184,17 +184,40 @@ async fn main() {
             println!("Up is down");
 
             let temp: [[i32; 4]; 4] = piece.clone();
+            
+            piece[0][0] = temp[3][0];
+            piece[0][1] = temp[2][0];
+            piece[0][2] = temp[1][0];
+            piece[0][3] = temp[0][0];
 
-            let mut x: i32 = 0;
-            while x < temp.len() as i32 {
-                let mut y: i32 = 0;
-                while y < temp[x as usize].len() as i32 {
-                    // TODO <ROTATE PROPERLY>
-                    piece[x as usize][y as usize] = temp[y as usize][x as usize];
-                    y += 1;
-                }
-                x += 1;
-            }
+            piece[1][0] = temp[3][1];
+            piece[1][1] = temp[2][1];
+            piece[1][2] = temp[1][1];
+            piece[1][3] = temp[0][1];
+            
+            piece[2][0] = temp[3][2];
+            piece[2][1] = temp[2][2];
+            piece[2][2] = temp[1][2];
+            piece[2][3] = temp[0][2];
+
+            piece[3][0] = temp[3][3];
+            piece[3][1] = temp[2][3];
+            piece[3][2] = temp[1][3];
+            piece[3][3] = temp[0][3];
+            
+
+
+            // TODO <ROTATE PROPERLY>
+            // let mut x: i32 = 0;
+            // while x < temp.len() as i32 {
+            //     let mut y: i32 = 0;
+            //     while y < temp[x as usize].len() as i32 {
+                    
+            //         piece[x as usize][y as usize] = temp[y as usize][x as usize];
+            //         y += 1;
+            //     }
+            //     x += 1;
+            // }
 
         }
         // Move Piece left
