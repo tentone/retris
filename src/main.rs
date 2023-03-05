@@ -60,9 +60,6 @@ impl Tetris {
 
 #[macroquad::main("Retris")]
 async fn main() {
-    // Random number generator
-    // let mut rng = rand::thread_rng();
-
     // Flag to indicate if the game is running
     let mut running = true;
 
@@ -232,6 +229,25 @@ async fn main() {
 
         // Place the piece where it is (just for testing)
         if is_key_pressed(KeyCode::F) {
+            let mut piece_idx: i32 = macroquad::rand::gen_range::<i32>(0, pieces.len() as i32);
+            let mut color_idx: i32 = macroquad::rand::gen_range::<i32>(1, colors.len() as i32);
+            piece = pieces[piece_idx as usize].clone();
+
+            // Set color
+            let mut x: i32 = 0;
+            while x < piece.len() as i32 {
+                let mut y: i32 = 0;
+                while y < piece[x as usize].len() as i32 {
+                    if piece[x as usize][y as usize] != 0 {
+                        piece[x as usize][y as usize] = color_idx;
+                    }
+                    
+                    y += 1;
+                }
+                x += 1;
+            }
+
+            // Force place piece in board
             // TODO <FORCE PLACE PIECE>
         }
 
