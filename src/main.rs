@@ -196,8 +196,6 @@ async fn main() {
                 x += 1;
             }
 
-
-
         }
         // Move Piece left
         if is_key_pressed(KeyCode::Left) {
@@ -209,8 +207,12 @@ async fn main() {
             piece_pos.x += 1;
         }
 
+        // Place the piece where it is (just for testing)
+        if is_key_pressed(KeyCode::F) {
+            // TODO <FORCE PLACE PIECE>
+        }
 
-        // Place Piece
+        // Move Piece faster
         let mut speedup: bool = false;
         if is_key_down(KeyCode::Down) {
             println!("down is down");
