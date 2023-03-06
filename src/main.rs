@@ -167,6 +167,7 @@ async fn main() {
 
     // Piece position and type
     let mut piece_pos: Vector2i = Vector2i::new(4, 0);
+    let piece_size: Vector2i = Vector2i::new(4, 4);
     let mut piece: [[i32; 4]; 4] = pieces[0].clone();
 
     
@@ -227,12 +228,31 @@ async fn main() {
         }
         // Move Piece left
         if is_key_pressed(KeyCode::Left) {
+            let mut piece_can_move_left: bool = true;
+            
+            if piece_pos.x <= 0 {
+                piece_can_move_left = false;
+            }
+
+            // Move the piece
+            if piece_can_move_left {
+                piece_pos.x -= 1;
+            }
+
             println!("left is down");
-            piece_pos.x -= 1;
         }
         if is_key_pressed(KeyCode::Right) {
             println!("right is down");
-            piece_pos.x += 1;
+            let mut piece_can_move_right: bool = true;
+            
+            if piece_pos.x + piece_size.x >= 10 {
+                piece_can_move_right = false;
+            }
+
+            // Move the piece
+            if piece_can_move_right {
+                piece_pos.x += 1;
+            }
         }
 
         // Place the piece where it is (just for testing)
@@ -286,11 +306,12 @@ async fn main() {
         // Move piece down
         if frame % 40 == 0 || speedup && frame % 5 == 0 {
             // Check if the piece can move down further
-            let mut piece_can_move: bool = true;
+            let mut piece_can_move_down: bool = true;
+
             // TODO
 
             // Move the piece down
-            if piece_can_move {
+            if piece_can_move_down {
                 piece_pos.y += 1;
             }
 
