@@ -16,6 +16,14 @@ impl Vector2i {
     pub fn add(&self, a: Vector2i) -> Vector2i {
         return Vector2i::new(self.x + a.x, self.y + a.y);
     }
+
+    /**
+     * Set the value of the vector.
+     */
+    pub fn set(&mut self, x: i32, y: i32) -> () {
+        self.x = x;
+        self.y = y;
+    }
 }
 
 pub struct TetrisBoard {
@@ -229,11 +237,30 @@ async fn main() {
 
         // Place the piece where it is (just for testing)
         if is_key_pressed(KeyCode::F) {
+
+            // Force-place piece in board
+            let mut y: i32 = 0;
+            while y < piece.len() as i32 {
+                let mut x: i32 = 0;
+                while x < piece[y as usize].len() as i32 {
+                    if piece[y as usize][x as usize] != 0 {
+                        board[(y + piece_pos.y) as usize][(x + piece_pos.x) as usize] = piece[y as usize][x as usize];
+                    }
+                    
+                    x += 1;
+                }
+                y += 1;
+            }
+            // TODO <FORCE PLACE PIECE>
+
+            // Select new piece and color at random
             let mut piece_idx: i32 = macroquad::rand::gen_range::<i32>(0, pieces.len() as i32);
             let mut color_idx: i32 = macroquad::rand::gen_range::<i32>(1, colors.len() as i32);
             piece = pieces[piece_idx as usize].clone();
+            
+            piece_pos.set(0, 0);
 
-            // Set color
+            // Set color of the piece
             let mut x: i32 = 0;
             while x < piece.len() as i32 {
                 let mut y: i32 = 0;
@@ -246,9 +273,6 @@ async fn main() {
                 }
                 x += 1;
             }
-
-            // Force place piece in board
-            // TODO <FORCE PLACE PIECE>
         }
 
         // Move Piece faster
@@ -342,7 +366,11 @@ async fn main() {
         while x < 4 {
             let mut y: i32 = 0;
             while y < 4 {
-                draw_rectangle(origin + block * (piece_pos.x + x) as f32, block * (piece_pos.y + y) as f32, block as f32, block, colors[piece[y as usize][x as usize] as usize]);
+                let color = piece[y as usize][x as usize];
+                if color != 0 {
+                    draw_rectangle(origin + block * (piece_pos.x + x) as f32, block * (piece_pos.y + y) as f32, block as f32, block, colors[color as usize]);
+                }
+                
                 y += 1;
             }
             x += 1;
