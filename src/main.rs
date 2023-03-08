@@ -170,6 +170,7 @@ async fn main() {
     let piece_size: Vector2i = Vector2i::new(4, 4);
     let mut piece: [[i32; 4]; 4] = pieces[0].clone();
 
+
     
     while running {
         // ------------------- Update Logic -------------------
@@ -234,7 +235,7 @@ async fn main() {
 
         // Place the piece where it is (just for testing)
         if is_key_pressed(KeyCode::F) {
-
+            // TODO <-----------------FUNCTION TO PLACE PIECE START-------------------->
             // Force-place piece in board
             let mut y: i32 = 0;
             while y < piece.len() as i32 {
@@ -249,6 +250,7 @@ async fn main() {
                 y += 1;
             }
 
+            // TODO <-----------------FUNCTION TO SELECT NEW PIECE-------------------->
             // Select new piece and color at random
             let mut piece_idx: i32 = macroquad::rand::gen_range::<i32>(0, pieces.len() as i32);
             let mut color_idx: i32 = macroquad::rand::gen_range::<i32>(1, colors.len() as i32);
@@ -269,6 +271,9 @@ async fn main() {
                 }
                 x += 1;
             }
+            // TODO <-----------------FUNCTION TO SELECT NEW PIECE END-------------------->
+
+            // TODO <-----------------FUNCTION TO PLACE PIECE END-------------------->
         }
 
         // Move Piece faster
@@ -283,12 +288,67 @@ async fn main() {
         if frame % 40 == 0 || speedup && frame % 5 == 0 {
             // Check if the piece can move down further
             let mut piece_can_move_down: bool = true;
-
-            // TODO
+            
+            // Check if the piece can move +1 in Y
+            let mut y: i32 = 0;
+            while y < piece.len() as i32 {
+                let mut x: i32 = 0;
+                while x < piece[y as usize].len() as i32 {
+                    if piece[y as usize][x as usize] != 0 {
+                        // Check if piece in range inside of the board
+                        if piece_pos.y + y + 1 >= size.y {
+                            piece_can_move_down = false;
+                        }
+                    }
+                    
+                    x += 1;
+                }
+                y += 1;
+            }
 
             // Move the piece down
             if piece_can_move_down {
                 piece_pos.y += 1;
+            // Place piece to the board.
+            } else {
+                // TODO <-----------------FUNCTION TO PLACE PIECE START-------------------->
+                // Force-place piece in board
+                let mut y: i32 = 0;
+                while y < piece.len() as i32 {
+                    let mut x: i32 = 0;
+                    while x < piece[y as usize].len() as i32 {
+                        if piece[y as usize][x as usize] != 0 {
+                            board[(y + piece_pos.y) as usize][(x + piece_pos.x) as usize] = piece[y as usize][x as usize];
+                        }
+                        
+                        x += 1;
+                    }
+                    y += 1;
+                }
+
+                // Select new piece and color at random
+                let mut piece_idx: i32 = macroquad::rand::gen_range::<i32>(0, pieces.len() as i32);
+                let mut color_idx: i32 = macroquad::rand::gen_range::<i32>(1, colors.len() as i32);
+                piece = pieces[piece_idx as usize].clone();
+                
+                piece_pos.set(0, 0);
+
+                // Set color of the piece
+                let mut x: i32 = 0;
+                while x < piece.len() as i32 {
+                    let mut y: i32 = 0;
+                    while y < piece[x as usize].len() as i32 {
+                        if piece[x as usize][y as usize] != 0 {
+                            piece[x as usize][y as usize] = color_idx;
+                        }
+                        
+                        y += 1;
+                    }
+                    x += 1;
+                }
+
+                // TODO <-----------------FUNCTION TO PLACE PIECE END-------------------->
+
             }
 
             // Check the status of the board
