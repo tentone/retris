@@ -288,15 +288,16 @@ async fn main() {
         if frame % 40 == 0 || speedup && frame % 5 == 0 {
             // Check if the piece can move down further
             let mut piece_can_move_down: bool = true;
-            
+
+            // -------------- CHECK IF PIECE CAN MOVE DOWN -----------------------
             // Check if the piece can move +1 in Y
             let mut y: i32 = 0;
             while y < piece.len() as i32 {
                 let mut x: i32 = 0;
                 while x < piece[y as usize].len() as i32 {
                     if piece[y as usize][x as usize] != 0 {
-                        // Check if piece in range inside of the board
-                        if piece_pos.y + y + 1 >= size.y {
+                        // Check if piece in range inside of the board and if will collide with an existing piece on the board
+                        if piece_pos.y + y + 1 >= size.y || board[(piece_pos.y + y + 1) as usize][(piece_pos.x + x) as usize] !=  {
                             piece_can_move_down = false;
                         }
                     }
@@ -305,6 +306,7 @@ async fn main() {
                 }
                 y += 1;
             }
+            // -------------- CHECK IF PIECE CAN MOVE DOWN -----------------------
 
             // Move the piece down
             if piece_can_move_down {
