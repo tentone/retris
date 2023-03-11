@@ -1,5 +1,6 @@
 use crate::{vector2::Vector2i, color};
 
+// List of possible piece in the game.
 pub const pieces: [[[i32; 4]; 4]; 7] = [
     [
         [0, 0, 0, 0],
@@ -56,6 +57,16 @@ pub struct Piece {
     pub piece: [[i32; 4]; 4]
 }
 
+impl Clone for Piece {
+    fn clone(&self) -> Piece {
+        return Piece {
+            pos: self.pos.clone(),
+            size: self.size.clone(),
+            piece: self.piece.clone()
+        }
+    }
+}
+
 impl Piece {
     // Create a new piece
     pub fn new() -> Piece {
@@ -64,6 +75,10 @@ impl Piece {
             size: Vector2i::new(4, 4),
             piece: pieces[0].clone()
         };
+    }
+
+    pub fn clone() {
+        
     }
 
     // Select a new piece at random with a random color

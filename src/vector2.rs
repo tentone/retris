@@ -3,6 +3,15 @@ pub struct Vector2i {
     pub y: i32
 }
 
+impl Clone for Vector2i {
+    fn clone(&self) -> Vector2i {
+        return Vector2i {
+            x: self.x,
+            y: self.y,
+        }
+    }
+}
+
 impl Vector2i {
     pub fn new(x: i32, y: i32) -> Vector2i {
         return Vector2i { x: x, y: y };
