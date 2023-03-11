@@ -1,52 +1,9 @@
 use macroquad::prelude::*;
-use vector2;
+use crate::vector2::Vector2i;
+use crate::piece::Piece;
 
-pub struct TetrisBoard {
-    size: Vector2i,
-    block: Vector2i,
-    board: [[i32; 10]; 20],
-
-}
-
-pub struct Piece {
-    pos: Vector2i,
-
-    piece: [[i32; 4]; 4]
-}
-
-
-pub struct Tetris {
-    board: TetrisBoard,
-    
-    // Status
-    running: bool,
-
-    // Store the current game score
-    score: i32,
-}
-
-impl Tetris {
-
-    pub fn reset() {
-
-    }
-
-    pub fn change_state(mut self, running: bool) {
-        self.running = running;
-    }
-
-    pub fn update() {
-
-    }
-    
-    pub fn draw() {
-            
-    
-    }
-}
-
-
-
+mod vector2;
+mod piece;
 
 #[macroquad::main("Retris")]
 async fn main() {

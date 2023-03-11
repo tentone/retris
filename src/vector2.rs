@@ -1,8 +1,6 @@
-pub mod vector2;
-
 pub struct Vector2i {
-    x: i32,
-    y: i32
+    pub x: i32,
+    pub y: i32
 }
 
 impl Vector2i {
