@@ -1,4 +1,5 @@
 
+// List of colors associated with the tetris blocks
 pub const colors: [macroquad::color::Color; 8] = [
     macroquad::color::BLACK,
     macroquad::color::GREEN,

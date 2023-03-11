@@ -77,10 +77,6 @@ impl Piece {
         };
     }
 
-    pub fn clone() {
-        
-    }
-
     // Select a new piece at random with a random color
     pub fn random(&mut self) {
         let mut piece_idx: i32 = macroquad::rand::gen_range::<i32>(0, pieces.len() as i32);
