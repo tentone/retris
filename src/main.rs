@@ -30,6 +30,13 @@ pub struct TetrisBoard {
     size: Vector2i,
     block: Vector2i,
     board: [[i32; 10]; 20],
+
+}
+
+pub struct Piece {
+    pos: Vector2i,
+
+    piece: [[i32; 4]; 4]
 }
 
 
@@ -171,7 +178,6 @@ async fn main() {
     let mut piece: [[i32; 4]; 4] = pieces[0].clone();
 
 
-    
     while running {
         // ------------------- Update Logic -------------------
         // let ms = SystemTime::now().duration_since(UNIX_EPOCH).as_millis();
@@ -208,10 +214,24 @@ async fn main() {
         if is_key_pressed(KeyCode::Left) {
             let mut piece_can_move_left: bool = true;
             
-            if piece_pos.x <= 0 {
-                piece_can_move_left = false;
+              // -------------- CHECK IF PIECE CAN MOVE +1X -----------------------
+            // Check if the piece can move +1 in X
+            let mut y: i32 = 0;
+            while y < piece.len() as i32 {
+                let mut x: i32 = 0;
+                while x < piece[y as usize].len() as i32 {
+                    if piece[y as usize][x as usize] != 0 {
+                        // Check if piece in range inside of the board and if will collide with an existing piece on the board
+                        if piece_pos.x + x - 1 < 0 || board[(piece_pos.y + y) as usize][(piece_pos.x + x - 1) as usize] != 0 {
+                            piece_can_move_left = false;
+                        }
+                    }
+                    
+                    x += 1;
+                }
+                y += 1;
             }
-
+            // -------------- CHECK IF PIECE CAN MOVE +1X -----------------------
             // Move the piece
             if piece_can_move_left {
                 piece_pos.x -= 1;
@@ -223,9 +243,28 @@ async fn main() {
             println!("right is down");
             let mut piece_can_move_right: bool = true;
             
-            if piece_pos.x + piece_size.x >= 10 {
-                piece_can_move_right = false;
+            // if piece_pos.x + piece_size.x >= 10 {
+            //     piece_can_move_right = false;
+            // }
+
+            // -------------- CHECK IF PIECE CAN MOVE +1X -----------------------
+            // Check if the piece can move +1 in X
+            let mut y: i32 = 0;
+            while y < piece.len() as i32 {
+                let mut x: i32 = 0;
+                while x < piece[y as usize].len() as i32 {
+                    if piece[y as usize][x as usize] != 0 {
+                        // Check if piece in range inside of the board and if will collide with an existing piece on the board
+                        if piece_pos.x + x + 1 >= size.x || board[(piece_pos.y + y) as usize][(piece_pos.x + x + 1) as usize] != 0 {
+                            piece_can_move_right = false;
+                        }
+                    }
+                    
+                    x += 1;
+                }
+                y += 1;
             }
+            // -------------- CHECK IF PIECE CAN MOVE +1X -----------------------
 
             // Move the piece
             if piece_can_move_right {
@@ -285,11 +324,11 @@ async fn main() {
         
 
         // Move piece down
-        if frame % 40 == 0 || speedup && frame % 5 == 0 {
+        if frame % 40 == 0 || speedup && frame % 3 == 0 {
             // Check if the piece can move down further
             let mut piece_can_move_down: bool = true;
 
-            // -------------- CHECK IF PIECE CAN MOVE DOWN -----------------------
+            // -------------- CHECK IF PIECE CAN MOVE +1Y -----------------------
             // Check if the piece can move +1 in Y
             let mut y: i32 = 0;
             while y < piece.len() as i32 {
@@ -306,7 +345,7 @@ async fn main() {
                 }
                 y += 1;
             }
-            // -------------- CHECK IF PIECE CAN MOVE DOWN -----------------------
+            // -------------- CHECK IF PIECE CAN MOVE +1Y  -----------------------
 
             // Move the piece down
             if piece_can_move_down {
