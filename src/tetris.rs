@@ -5,6 +5,13 @@ use crate::color::colors;
 use crate::piece::Piece;
 use crate::vector2::Vector2i;
 
+
+pub enum TetrisState {
+    Running,
+    GameOver,
+    Exit
+}
+
 pub struct Tetris {
     // Board
     pub board: TetrisBoard,
@@ -13,7 +20,7 @@ pub struct Tetris {
     pub piece: Piece,
 
     // Flag to indicate if the game is running
-    pub running: bool,
+    pub state: TetrisState,
 
     // Pause control flag
     pub paused: bool,
@@ -31,7 +38,7 @@ impl Tetris {
         return Tetris{
             board: TetrisBoard::new(),
             piece: Piece::new(),
-            running: true,
+            state: TetrisState::Running,
             paused: false,
             frame: 0,
             score: 0
@@ -39,12 +46,12 @@ impl Tetris {
     }
 
     // Change the state of the tetris game
-    pub fn change_state(&mut self, running: bool) {
-        self.running = running;
+    pub fn setState(&mut self, state: TetrisState) {
+        self.state = state;
     }
 
     pub async fn run(&mut self) {
-        while self.running {
+        while !matches!(self.state, TetrisState::Exit) {
             self.update();
             self.render();
 
@@ -52,7 +59,7 @@ impl Tetris {
 
             // Close application
             if is_key_down(KeyCode::Escape) {
-                return;
+                self.setState(TetrisState::Exit);
             }
 
             next_frame().await;
