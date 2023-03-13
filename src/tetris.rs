@@ -195,7 +195,7 @@ impl Tetris {
             draw_rectangle(0.0, 0.0, width, height, macroquad::color::Color{r: 0.0, g: 0.0, b: 0.0, a: 0.4});
 
             // measure_text("Game Over, Press R to Restart", macroquad::text::Font::default, 40, 1.0);
-            draw_text("Game Over, Press R to Restart", width / 2.0 - 200.0, height / 2.0, 40.0, macroquad::color::WHITE);
+            draw_text("Game Over, Press R to Restart", width / 2.0 - 230.0, height / 2.0, 40.0, macroquad::color::WHITE);
         }
 
     }
