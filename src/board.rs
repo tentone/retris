@@ -46,4 +46,8 @@ impl TetrisBoard {
             ]
         };
     }
+
+    pub fn clear(&mut self) {
+        
+    }
 }

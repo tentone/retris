@@ -1,6 +1,7 @@
 use crate::tetris::Tetris;
 
 mod vector2;
+mod pieces;
 mod piece;
 mod tetris;
 mod color;

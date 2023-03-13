@@ -45,6 +45,15 @@ impl Tetris {
         }
     }
 
+    pub fn reset(&mut self) {
+        self.board = TetrisBoard::new();
+        self.piece = Piece::new();
+        self.state = TetrisState::Running;
+        self.paused = false;
+        self.frame = 0;
+        self.score = 0;
+    }
+
     // Change the state of the tetris game
     pub fn setState(&mut self, state: TetrisState) {
         self.state = state;
@@ -67,58 +76,71 @@ impl Tetris {
     }
 
     pub fn update(&mut self) {
-        // Pause
-        if is_key_pressed(KeyCode::P) {
-            self.paused = !self.paused;
-        }
-
-
-        // Rotate Piece
-        if is_key_pressed(KeyCode::Up) {
-            self.piece.rotate();
-        }
-
-        // Move Piece left
-        if is_key_pressed(KeyCode::Left) {
-            if self.piece_can_move(Vector2i{x: -1, y: 0}) {
-                self.piece.pos.x -= 1;
+        if matches!(self.state, TetrisState::GameOver) {
+            if is_key_pressed(KeyCode::R) {
+                self.reset();
             }
         }
-        if is_key_pressed(KeyCode::Right) {
-            if self.piece_can_move(Vector2i{x: 1, y: 0}) {
-                self.piece.pos.x += 1;
+        else if matches!(self.state, TetrisState::Running) {
+            // Pause
+            if is_key_pressed(KeyCode::P) {
+                self.paused = !self.paused;
             }
-        }
 
-        // Place the piece where it is (just for testing)
-        if is_key_pressed(KeyCode::F) {
-            self.place_piece();
-            self.piece.random();
-        }
+            if self.paused {
+                return;
+            }
 
-        // Move Piece faster
-        let mut speedup: bool = false;
-        if is_key_down(KeyCode::Down) {
-            speedup = true;
-        }
-        
+            // Rotate Piece
+            if is_key_pressed(KeyCode::Up) {
+                self.piece.rotate();
+            }
 
-        // Move piece down
-        if self.frame % 40 == 0 || speedup && self.frame % 3 == 0 {
-            // Check if the piece can move down further
-            let mut piece_can_move_down: bool = self.piece_can_move(Vector2i{x: 0, y: 1});
+            // Move Piece left
+            if is_key_pressed(KeyCode::Left) {
+                if self.piece_can_move(Vector2i{x: -1, y: 0}) {
+                    self.piece.pos.x -= 1;
+                }
+            }
+            if is_key_pressed(KeyCode::Right) {
+                if self.piece_can_move(Vector2i{x: 1, y: 0}) {
+                    self.piece.pos.x += 1;
+                }
+            }
 
-
-            // Move the piece down
-            if piece_can_move_down {
-                self.piece.pos.y += 1;
-            // Place piece to the tetris.board.
-            } else {
+            // Place the piece where it is (just for testing)
+            if is_key_pressed(KeyCode::F) {
                 self.place_piece();
                 self.piece.random();
             }
 
-            self.check_rows();
+            // Move Piece faster
+            let mut speedup: bool = false;
+            if is_key_down(KeyCode::Down) {
+                speedup = true;
+            }
+            
+            // Check top row
+            if self.check_top_row() {
+                self.setState(TetrisState::GameOver)
+            }
+
+            // Move piece down
+            if self.frame % 40 == 0 || speedup && self.frame % 3 == 0 {
+                // Check if the piece can move down further
+                let mut piece_can_move_down: bool = self.piece_can_move(Vector2i{x: 0, y: 1});
+
+                // Move the piece down
+                if piece_can_move_down {
+                    self.piece.pos.y += 1;
+                // Place piece to the tetris.board.
+                } else {
+                    self.place_piece();
+                    self.piece.random();
+                }
+
+                self.check_full_rows();
+            }
         }
     }
     
@@ -168,12 +190,31 @@ impl Tetris {
             draw_rectangle(0.0, 0.0, width, height, macroquad::color::Color{r: 0.0, g: 0.0, b: 0.0, a: 0.4});
             draw_text("Paused", width / 2.0, height / 2.0, 40.0, macroquad::color::WHITE);
         }
+
+        if matches!(self.state, TetrisState::GameOver) {
+            draw_rectangle(0.0, 0.0, width, height, macroquad::color::Color{r: 0.0, g: 0.0, b: 0.0, a: 0.4});
+
+            // measure_text("Game Over, Press R to Restart", macroquad::text::Font::default, 40, 1.0);
+            draw_text("Game Over, Press R to Restart", width / 2.0 - 200.0, height / 2.0, 40.0, macroquad::color::WHITE);
+        }
+
+    }
+
+    // Check if there is any piece in the top row.
+    pub fn check_top_row(&mut self) -> bool {
+        for x in 0..self.board.board[0].len() {
+            if self.board.board[0][x] != 0 {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // Check if there are any full rows.
     //
     // Destroy the rows and increase score.
-    pub fn check_rows(&mut self) {
+    pub fn check_full_rows(&mut self) {
         // Check the status of the tetris.board
         let mut y: i32 = 0;
         while y < self.board.size.y {

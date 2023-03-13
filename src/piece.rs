@@ -1,50 +1,4 @@
-use crate::{vector2::Vector2i, color};
-
-// List of possible piece in the game.
-pub const pieces: [[[i32; 4]; 4]; 7] = [
-    [
-        [0, 0, 0, 0],
-        [1, 1, 1, 1],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
-    ],
-    [
-        [1, 0, 0, 0],
-        [1, 1, 1, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
-    ],
-    [
-        [0, 0, 0, 0],
-        [0, 1, 1, 0],
-        [0, 1, 1, 0],
-        [0, 0, 0, 0]
-    ],
-    [
-        [0, 0, 0, 1],
-        [0, 1, 1, 1],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
-    ],
-    [
-        [0, 1, 0, 0],
-        [1, 1, 1, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
-    ],
-    [
-        [0, 0, 1, 1],
-        [0, 1, 1, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
-    ],
-    [
-        [1, 1, 0, 0],
-        [0, 1, 1, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
-    ]
-];
+use crate::{vector2::Vector2i, color, pieces};
 
 pub struct Piece {
     // Position of the piece
@@ -73,16 +27,16 @@ impl Piece {
         return Piece {
             pos: Vector2i::new(4, 0),
             size: Vector2i::new(4, 4),
-            piece: pieces[0].clone()
+            piece: pieces::Pieces[0].clone()
         };
     }
 
     // Select a new piece at random with a random color
     pub fn random(&mut self) {
-        let mut piece_idx: i32 = macroquad::rand::gen_range::<i32>(0, pieces.len() as i32);
+        let mut piece_idx: i32 = macroquad::rand::gen_range::<i32>(0, pieces::Pieces.len() as i32);
         let mut color_idx: i32 = macroquad::rand::gen_range::<i32>(1, color::colors.len() as i32);
         
-        self.piece = pieces[piece_idx as usize].clone();
+        self.piece = pieces::Pieces[piece_idx as usize].clone();
         self.pos.set(0, 0);
 
         // Set color of the piece
