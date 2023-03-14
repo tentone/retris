@@ -5,7 +5,6 @@ use crate::color::colors;
 use crate::piece::Piece;
 use crate::vector2::Vector2i;
 
-
 pub enum TetrisState {
     Running,
     GameOver,
@@ -93,7 +92,12 @@ impl Tetris {
 
             // Rotate Piece
             if is_key_pressed(KeyCode::Up) {
-                self.piece.rotate();
+                let mut piece = self.piece.clone();
+                piece.rotate();
+
+                if self.piece_can_move(piece, Vector2i{x: 0, y: 0}) {
+                    self.piece.rotate();
+                }
             }
 
             // Move Piece left
