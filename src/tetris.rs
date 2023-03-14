@@ -98,12 +98,12 @@ impl Tetris {
 
             // Move Piece left
             if is_key_pressed(KeyCode::Left) {
-                if self.piece_can_move(Vector2i{x: -1, y: 0}) {
+                if self.piece_can_move(self.piece, Vector2i{x: -1, y: 0}) {
                     self.piece.pos.x -= 1;
                 }
             }
             if is_key_pressed(KeyCode::Right) {
-                if self.piece_can_move(Vector2i{x: 1, y: 0}) {
+                if self.piece_can_move(self.piece, Vector2i{x: 1, y: 0}) {
                     self.piece.pos.x += 1;
                 }
             }
@@ -128,7 +128,7 @@ impl Tetris {
             // Move piece down
             if self.frame % 40 == 0 || speedup && self.frame % 3 == 0 {
                 // Check if the piece can move down further
-                let mut piece_can_move_down: bool = self.piece_can_move(Vector2i{x: 0, y: 1});
+                let mut piece_can_move_down: bool = self.piece_can_move(self.piece, Vector2i{x: 0, y: 1});
 
                 // Move the piece down
                 if piece_can_move_down {
@@ -259,23 +259,23 @@ impl Tetris {
     }
 
     // Check if there is a collision when the piece is moved.
-    pub fn piece_can_move(&mut self, delta: Vector2i) -> bool {
+    pub fn piece_can_move(&mut self, piece: Piece, delta: Vector2i) -> bool {
         let mut y: i32 = 0;
-        while y < self.piece.piece.len() as i32 {
+        while y < piece.piece.len() as i32 {
             let mut x: i32 = 0;
-            while x < self.piece.piece[y as usize].len() as i32 {
-                if self.piece.piece[y as usize][x as usize] != 0 {
+            while x < piece.piece[y as usize].len() as i32 {
+                if piece.piece[y as usize][x as usize] != 0 {
                     // Check if piece in range inside of the tetris board
-                    if self.piece.pos.x + x + delta.x < 0 || self.piece.pos.x + x + delta.x >= self.board.size.x {
+                    if piece.pos.x + x + delta.x < 0 || piece.pos.x + x + delta.x >= self.board.size.x {
                         return false
                     }
 
-                    if self.piece.pos.y + y + delta.y < 0 || self.piece.pos.y + y + delta.y >= self.board.size.y {
+                    if piece.pos.y + y + delta.y < 0 || piece.pos.y + y + delta.y >= self.board.size.y {
                         return false
                     }
                     
                     // Check if will collide with an existing piece on the tetris.board
-                    if self.board.board[(self.piece.pos.y + y + delta.y) as usize][(self.piece.pos.x + x + delta.x) as usize] != 0 {
+                    if self.board.board[(piece.pos.y + y + delta.y) as usize][(piece.pos.x + x + delta.x) as usize] != 0 {
                         return false;
                     }
                 }

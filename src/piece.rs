@@ -21,6 +21,8 @@ impl Clone for Piece {
     }
 }
 
+impl Copy for Piece { }
+
 impl Piece {
     // Create a new piece
     pub fn new() -> Piece {

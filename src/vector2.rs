@@ -12,6 +12,8 @@ impl Clone for Vector2i {
     }
 }
 
+impl Copy for Vector2i { }
+
 impl Vector2i {
     pub fn new(x: i32, y: i32) -> Vector2i {
         return Vector2i { x: x, y: y };
