@@ -9,6 +9,6 @@ mod board;
 
 #[macroquad::main("Retris")]
 async fn main() {
-    let mut tetris: Tetris = Tetris::new();
+    let mut tetris: Tetris = Tetris::new().await;
     tetris.run().await;
 }

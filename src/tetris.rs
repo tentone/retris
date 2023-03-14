@@ -1,3 +1,4 @@
+use macroquad::audio::{load_sound, play_sound_once, Sound};
 use macroquad::prelude::*;
 
 use crate::board::TetrisBoard;
@@ -33,7 +34,10 @@ pub struct Tetris {
 
 impl Tetris {
     // Create a new tetris game object
-    pub fn new() -> Tetris {
+    pub async fn new() -> Tetris {
+        let sound: Result<Sound, FileError> = load_sound("./assets/step.ogg").await;
+        play_sound_once(sound.unwrap());
+
         return Tetris{
             board: TetrisBoard::new(),
             piece: Piece::new(),
