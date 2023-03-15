@@ -12,7 +12,38 @@ pub enum TetrisState {
     Exit
 }
 
+pub struct TetrisSounds {
+    /**
+     * Played when the piece takes a step
+     */
+    pub step: Sound,
+
+    /**
+     * Background music.
+     */
+    pub music: Sound,
+
+    /**
+     * Piece placement sound
+     */
+    pub place: Sound
+}
+
+impl TetrisSounds {
+    pub async fn new() -> TetrisSounds {
+        return TetrisSounds {
+            step: (load_sound("./assets/step.ogg").await).unwrap(),
+            music: (load_sound("./assets/down.ogg").await).unwrap(),
+            place: (load_sound("./assets/down.ogg").await).unwrap()
+        }
+    }
+}
+
 pub struct Tetris {
+
+    // Sound container
+    pub sound: TetrisSounds,
+
     // Board
     pub board: TetrisBoard,
     
@@ -35,10 +66,8 @@ pub struct Tetris {
 impl Tetris {
     // Create a new tetris game object
     pub async fn new() -> Tetris {
-        let sound: Result<Sound, FileError> = load_sound("./assets/step.ogg").await;
-        play_sound_once(sound.unwrap());
-
         return Tetris{
+            sound: TetrisSounds::new().await,
             board: TetrisBoard::new(),
             piece: Piece::new(),
             state: TetrisState::Running,
@@ -101,6 +130,7 @@ impl Tetris {
 
                 if self.piece_can_move(piece, Vector2i{x: 0, y: 0}) {
                     self.piece.rotate();
+                    play_sound_once(self.sound.step);
                 }
             }
 
@@ -143,6 +173,7 @@ impl Tetris {
                     self.piece.pos.y += 1;
                 // Place piece to the tetris.board.
                 } else {
+                    play_sound_once(self.sound.place);
                     self.place_piece();
                     self.piece.random();
                 }
