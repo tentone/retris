@@ -39,7 +39,7 @@ impl Piece {
         let mut color_idx: i32 = macroquad::rand::gen_range::<i32>(1, color::colors.len() as i32);
         
         self.piece = pieces::Pieces[piece_idx as usize].clone();
-        self.pos.set(0, 0);
+        self.pos.set(2, 0);
 
         // Set color of the piece
         let mut x: i32 = 0;

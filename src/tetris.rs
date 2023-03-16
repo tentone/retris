@@ -206,18 +206,18 @@ impl Tetris {
 
 
         // Moving piece
-        let mut x: i32 = 0;
-        while x < 4 {
-            let mut y: i32 = 0;
-            while y < 4 {
+        let mut y: usize = 0;
+        while y < self.piece.piece.len() {
+            let mut x: usize = 0;
+            while x < self.piece.piece[y as usize].len() {
                 let color = self.piece.piece[y as usize][x as usize];
                 if color != 0 {
-                    draw_rectangle(origin + block * (self.piece.pos.x + x) as f32, block * (self.piece.pos.y + y) as f32, block as f32, block, colors[color as usize]);
+                    draw_rectangle(origin + block * (self.piece.pos.x + x as i32) as f32, block * (self.piece.pos.y + y as i32) as f32, block as f32, block, colors[color as usize]);
                 }
                 
-                y += 1;
+                x += 1;
             }
-            x += 1;
+            y += 1;
         }
 
         // Draw text
