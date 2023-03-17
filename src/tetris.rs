@@ -237,15 +237,17 @@ impl Tetris {
 
 
         // Draw next piece to be removed.
-        let origin = Vector2i::new(width as i32 - 4 * block as i32, block as i32);
+        let preview: f32 = block / 1.5;
+        let origin = Vector2i::new(width as i32 - 5 * preview as i32, preview as i32);
         let next: Piece = self.next.peek().unwrap();
+
         for y in 0..next.size.y {
             for x in 0..next.size.x {
                 let color = next.piece[y as usize][x as usize];
-                draw_rectangle(origin.x as f32 + x as f32 * block, origin.y as f32 + y as f32 * block, block, block, colors[color as usize]);
+                draw_rectangle(origin.x as f32 + x as f32 * preview, origin.y as f32 + y as f32 * preview, preview, preview, colors[color as usize]);
+                draw_rectangle_lines(origin.x as f32 + x as f32 * preview, origin.y as f32 + y as f32 * preview, preview, preview, 1.0, macroquad::color::GRAY);
             }
         }
-
 
         // Draw text
         draw_text(&(String::from("Frame: ") + &self.frame.to_string()), 10.0, 25.0, 30.0, macroquad::color::WHITE);
