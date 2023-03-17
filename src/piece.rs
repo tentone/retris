@@ -33,6 +33,13 @@ impl Piece {
         };
     }
 
+    // Create a new piece with random values
+    pub fn newRandom() -> Piece {
+        let mut piece: Piece = Piece::new();
+        piece.random();
+        return piece;
+    }
+
     // Select a new piece at random with a random color
     pub fn random(&mut self) {
         let mut piece_idx: i32 = macroquad::rand::gen_range::<i32>(0, pieces::Pieces.len() as i32);

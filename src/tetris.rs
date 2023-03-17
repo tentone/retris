@@ -1,5 +1,6 @@
 use macroquad::audio::{load_sound, play_sound_once, Sound};
 use macroquad::prelude::*;
+use queues::*;
 
 use crate::board::TetrisBoard;
 use crate::color::colors;
@@ -40,6 +41,8 @@ impl TetrisSounds {
 }
 
 pub struct Tetris {
+    // Queue for tetris pieces
+    pub next: Queue<Piece>,
 
     // Sound container
     pub sound: TetrisSounds,
@@ -66,7 +69,13 @@ pub struct Tetris {
 impl Tetris {
     // Create a new tetris game object
     pub async fn new() -> Tetris {
+        let mut next: Queue<Piece> = queue![];
+        for i in 0..3 {
+            next.add(Piece::newRandom());
+        }
+
         return Tetris{
+            next: next,
             sound: TetrisSounds::new().await,
             board: TetrisBoard::new(),
             piece: Piece::new(),
@@ -175,14 +184,20 @@ impl Tetris {
                 } else {
                     play_sound_once(self.sound.place);
                     self.place_piece();
-                    self.piece.random();
+                    self.piece = self.next_piece();
                 }
 
                 self.check_full_rows();
             }
         }
     }
-    
+
+    pub fn next_piece(&mut self) -> Piece {
+        let piece = self.next.remove().unwrap();
+        self.next.add(Piece::newRandom());
+        return piece;
+    }
+
     pub fn render(&mut self) { 
         clear_background(BLACK);
 
@@ -212,13 +227,25 @@ impl Tetris {
             while x < self.piece.piece[y as usize].len() {
                 let color = self.piece.piece[y as usize][x as usize];
                 if color != 0 {
-                    draw_rectangle(origin + block * (self.piece.pos.x + x as i32) as f32, block * (self.piece.pos.y + y as i32) as f32, block as f32, block, colors[color as usize]);
+                    draw_rectangle(origin + block * (self.piece.pos.x + x as i32) as f32, block * (self.piece.pos.y + y as i32) as f32, block, block, colors[color as usize]);
                 }
                 
                 x += 1;
             }
             y += 1;
         }
+
+
+        // Draw next piece to be removed.
+        let origin = Vector2i::new(width as i32 - 4 * block as i32, block as i32);
+        let next: Piece = self.next.peek().unwrap();
+        for y in 0..next.size.y {
+            for x in 0..next.size.x {
+                let color = next.piece[y as usize][x as usize];
+                draw_rectangle(origin.x as f32 + x as f32 * block, origin.y as f32 + y as f32 * block, block, block, colors[color as usize]);
+            }
+        }
+
 
         // Draw text
         draw_text(&(String::from("Frame: ") + &self.frame.to_string()), 10.0, 25.0, 30.0, macroquad::color::WHITE);

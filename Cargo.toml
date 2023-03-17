@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 macroquad = "0.3.25"
+queues = "1.0.2"
 
 [target.wasm32-unknown-unknown]
 runner = "wasm-server-runner"
