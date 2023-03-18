@@ -13,6 +13,4 @@ Cargo.lock
 
 *.pdb
 
-build/retris.wasm
-
 tmp/

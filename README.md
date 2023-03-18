@@ -2,6 +2,7 @@
  - Tetris game written in rust with WASM support.
  - Small project to experiment with rust programing language.
  - Uses [macroquad](https://github.com/not-fl3/macroquad/) for input, graphics and sound.
+ - [Play the game from the browser](https://tentone.github.io/retris/build/).
 
 ![alt tag](https://raw.githubusercontent.com/tentone/retris/master/readme/video.gif)
 
