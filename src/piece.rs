@@ -43,7 +43,7 @@ impl Piece {
     // Select a new piece at random with a random color
     pub fn random(&mut self) {
         let mut piece_idx: i32 = macroquad::rand::gen_range::<i32>(0, pieces::Pieces.len() as i32);
-        let mut color_idx: i32 = macroquad::rand::gen_range::<i32>(1, color::colors.len() as i32);
+        let mut color_idx: i32 = piece_idx + 1;
         
         self.piece = pieces::Pieces[piece_idx as usize].clone();
         self.pos.set(2, 0);
